@@ -4,6 +4,8 @@ import './globals.css';
 import Header from '@/components/Header';
 import ThemeProvider from '@/components/ThemeProvider';
 import AppToaster from '@/components/AppToaster';
+import CompareBar from '@/components/CompareBar';
+import Providers from '@/components/Providers';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -22,12 +24,15 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       suppressHydrationWarning
       className={`${nunito.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-50">
-        <ThemeProvider>
-          <Header />
-          {children}
-          <AppToaster />
-        </ThemeProvider>
+      <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-50 pb-32">
+        <Providers>
+          <ThemeProvider>
+            <Header />
+            {children}
+            <CompareBar />
+            <AppToaster />
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

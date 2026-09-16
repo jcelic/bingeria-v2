@@ -2,6 +2,7 @@ import { Icon } from '@iconify/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import RemoveShowBtn from './RemoveShowBtn';
+import CompareBtn from './CompareBtn';
 
 type CardProps = {
   id: number;
@@ -55,7 +56,7 @@ const Card = ({ id, image, name, genres, rating, isWatchlist }: CardProps) => {
             ))}
           </div>
 
-          <div className="flex shrink-0 flex-col items-center gap-1">
+          <div className="flex shrink-0 flex-col items-end gap-4">
             {rating !== null && (
               <span
                 aria-label={`Rating ${rating} out of 10`}
@@ -70,11 +71,11 @@ const Card = ({ id, image, name, genres, rating, isWatchlist }: CardProps) => {
               </span>
             )}
 
-            {isWatchlist && (
-              <div className="relative z-20">
-                <RemoveShowBtn id={id} name={name} />
-              </div>
-            )}
+            <div className="relative z-20 flex items-center gap-2">
+              <CompareBtn id={id} />
+
+              {isWatchlist && <RemoveShowBtn id={id} name={name} />}
+            </div>
           </div>
         </div>
       </div>
