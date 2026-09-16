@@ -30,4 +30,5 @@ export type Episode = {
   name: string;
   season: number;
   number: number | null;
+  airdate: string | null;
 };
