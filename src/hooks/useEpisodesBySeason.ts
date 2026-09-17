@@ -9,5 +9,6 @@ export const useEpisodesBySeason = (
     queryKey: ['episodesBySeason', showId, seasonNumber],
     queryFn: () => getEpisodesBySeason(showId, seasonNumber!),
     enabled: seasonNumber !== null,
+    staleTime: Infinity,
   });
 };
