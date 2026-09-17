@@ -5,10 +5,14 @@ import { useSeasons } from '@/hooks/useSeasons';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import EpisodesSkeleton from './EpisodesSkeleton';
+import { useWatchedEpisodes } from '@/hooks/useWatchedEpisodes';
+import { useToggleWatched } from '@/hooks/useToggleWatched';
 
 const EpisodesSection = ({ id }: { id: number }) => {
   const { data: seasons = [], isLoading: isSeasonsLoading } = useSeasons(id);
   const [activeSeason, setActiveSeason] = useState<number | null>(null);
+  const { data: watchedEpisodes = [] } = useWatchedEpisodes();
+  const { mutate: toggleWatched } = useToggleWatched();
 
   const { data: episodesBySeason, isLoading: isEpisodesLoading } =
     useEpisodesBySeason(id, activeSeason);
@@ -55,36 +59,44 @@ const EpisodesSection = ({ id }: { id: number }) => {
         ) : isEpisodesLoading ? (
           <EpisodesSkeleton />
         ) : (
-          episodesBySeason?.map((episode) => (
-            <div
-              key={episode.id}
-              className="flex items-center justify-between gap-4 py-4"
-            >
-              <div>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                    Episode {episode.number}
-                  </span>
+          episodesBySeason?.map((episode) => {
+            const isWatched = watchedEpisodes.includes(episode.id);
 
-                  <h3 className="font-semibold">{episode.name}</h3>
+            return (
+              <div
+                key={episode.id}
+                className="flex items-center justify-between gap-4 py-4"
+              >
+                <div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+                      Episode {episode.number}
+                    </span>
+
+                    <h3 className="font-semibold">{episode.name}</h3>
+                  </div>
+
+                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                    {episode.airdate
+                      ? new Date(episode.airdate).toLocaleDateString()
+                      : 'Unknown air date'}
+                  </p>
                 </div>
 
-                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                  {episode.airdate
-                    ? new Date(episode.airdate).toLocaleDateString()
-                    : 'Unknown air date'}
-                </p>
+                <button
+                  type="button"
+                  onClick={() => toggleWatched(episode.id)}
+                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:hover:bg-zinc-700"
+                >
+                  <Icon
+                    icon={isWatched ? 'lucide:circle-check' : 'lucide:circle'}
+                    className="text-lg"
+                  />
+                  {isWatched ? 'Watched' : 'Mark as watched'}
+                </button>
               </div>
-
-              <button
-                type="button"
-                className="flex cursor-pointer items-center gap-2 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:hover:bg-zinc-700"
-              >
-                <Icon icon="lucide:circle" className="text-lg" />
-                Watched
-              </button>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </section>
