@@ -2,11 +2,12 @@
 
 import { useEpisodesBySeason } from '@/hooks/useEpisodesBySeason';
 import { useSeasons } from '@/hooks/useSeasons';
-import { Icon } from '@iconify/react';
-import { useState } from 'react';
-import EpisodesSkeleton from './EpisodesSkeleton';
 import { useWatchedEpisodes } from '@/hooks/useWatchedEpisodes';
 import { useToggleWatched } from '@/hooks/useToggleWatched';
+import { Icon } from '@iconify/react';
+import { useCallback, useState } from 'react';
+import EpisodesSkeleton from './EpisodesSkeleton';
+import EpisodeRow from './EpisodeRow';
 
 const EpisodesSection = ({ id }: { id: number }) => {
   const {
@@ -14,7 +15,9 @@ const EpisodesSection = ({ id }: { id: number }) => {
     isLoading: isSeasonsLoading,
     isError: isSeasonsError,
   } = useSeasons(id);
+
   const [activeSeason, setActiveSeason] = useState<number | null>(null);
+
   const { data: watchedEpisodes = [] } = useWatchedEpisodes();
   const { mutate: toggleWatched } = useToggleWatched();
 
@@ -23,6 +26,13 @@ const EpisodesSection = ({ id }: { id: number }) => {
     isLoading: isEpisodesLoading,
     isError: isEpisodesError,
   } = useEpisodesBySeason(id, activeSeason);
+
+  const handleToggleWatched = useCallback(
+    (episodeId: number) => {
+      toggleWatched(episodeId);
+    },
+    [toggleWatched],
+  );
 
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-800 dark:shadow-[0_2px_8px_rgba(0,0,0,0.35)] md:p-8">
@@ -78,44 +88,14 @@ const EpisodesSection = ({ id }: { id: number }) => {
             Failed to load episodes.
           </div>
         ) : (
-          episodesBySeason?.map((episode) => {
-            const isWatched = watchedEpisodes.includes(episode.id);
-
-            return (
-              <div
-                key={episode.id}
-                className="flex items-center justify-between gap-4 py-4"
-              >
-                <div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                      Episode {episode.number}
-                    </span>
-
-                    <h3 className="font-semibold">{episode.name}</h3>
-                  </div>
-
-                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    {episode.airdate
-                      ? new Date(episode.airdate).toLocaleDateString()
-                      : 'Unknown air date'}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => toggleWatched(episode.id)}
-                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:hover:bg-zinc-700"
-                >
-                  <Icon
-                    icon={isWatched ? 'lucide:circle-check' : 'lucide:circle'}
-                    className="text-lg"
-                  />
-                  {isWatched ? 'Watched' : 'Mark as watched'}
-                </button>
-              </div>
-            );
-          })
+          episodesBySeason?.map((episode) => (
+            <EpisodeRow
+              key={episode.id}
+              episode={episode}
+              isWatched={watchedEpisodes.includes(episode.id)}
+              onToggle={handleToggleWatched}
+            />
+          ))
         )}
       </div>
     </section>
