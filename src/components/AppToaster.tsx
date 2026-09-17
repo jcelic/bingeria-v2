@@ -1,14 +1,14 @@
 'use client';
 
-import { useTheme } from 'next-themes';
+import { useTheme } from '@/store/useTheme';
 import { Toaster } from 'sonner';
 
 const AppToaster = () => {
-  const { resolvedTheme } = useTheme();
+  const theme = useTheme((s) => s.theme);
 
   return (
     <Toaster
-      theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
+      theme={theme}
       position="top-center"
       toastOptions={{
         style: {
