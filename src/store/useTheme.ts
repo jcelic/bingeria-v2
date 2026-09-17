@@ -12,16 +12,9 @@ export const useTheme = create<ThemeState>()(
       theme: 'light',
 
       toggleTheme: () =>
-        set((s) => {
-          const newTheme = s.theme === 'light' ? 'dark' : 'light';
-
-          document.documentElement.classList.toggle(
-            'dark',
-            newTheme === 'dark',
-          );
-
-          return { theme: newTheme };
-        }),
+        set((s) => ({
+          theme: s.theme === 'light' ? 'dark' : 'light',
+        })),
     }),
     {
       name: 'theme',

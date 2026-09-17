@@ -4,22 +4,11 @@ import { useTheme } from '@/store/useTheme';
 import { Icon } from '@iconify/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
 
 const Header = () => {
   const pathname = usePathname();
   const toggleTheme = useTheme((s) => s.toggleTheme);
   const theme = useTheme((s) => s.theme);
-
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.remove('light');
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.add('light');
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50 bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.05)] dark:bg-zinc-800 dark:shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
