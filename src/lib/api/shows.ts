@@ -2,6 +2,11 @@
 // no-store nema smisla jer ne trebam svježe podatke na svaki request
 // force-cache bi mogao predugo zadržati zastarjele podatke.
 
+type Season = {
+  id: number;
+  number: number;
+};
+
 import type { Episode, SearchResult, Show } from '@/types/show';
 import { notFound } from 'next/navigation';
 
@@ -53,4 +58,51 @@ export const getShowEpisodes = async (id: number): Promise<Episode[]> => {
   const data: Episode[] = await response.json();
 
   return data;
+};
+
+export const getSeasons = async (showId: number): Promise<Season[]> => {
+  const response = await fetch(
+    `https://api.tvmaze.com/shows/${showId}/seasons`,
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch seasons');
+  }
+
+  const data: Season[] = await response.json();
+
+  return data;
+};
+
+export const getEpisodesBySeason = async (
+  showId: number,
+  seasonNumber: number,
+): Promise<Episode[]> => {
+  const seasonsResponse = await fetch(
+    `https://api.tvmaze.com/shows/${showId}/seasons`,
+  );
+
+  if (!seasonsResponse.ok) {
+    throw new Error('Failed to fetch seasons');
+  }
+
+  const seasonsData: Season[] = await seasonsResponse.json();
+
+  const season = seasonsData.find((item) => item.number === seasonNumber);
+
+  if (!season) {
+    throw new Error('Season not found');
+  }
+
+  const episodesResponse = await fetch(
+    `https://api.tvmaze.com/seasons/${season.id}/episodes`,
+  );
+
+  if (!episodesResponse.ok) {
+    throw new Error('Failed to fetch episodes');
+  }
+
+  const episodesData: Episode[] = await episodesResponse.json();
+
+  return episodesData;
 };
