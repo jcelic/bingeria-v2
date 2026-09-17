@@ -1,5 +1,6 @@
 import { toggleWatchedEpisode } from '@/lib/api/episodes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export const useToggleWatched = () => {
   const queryClient = useQueryClient();
@@ -30,6 +31,8 @@ export const useToggleWatched = () => {
 
     onError: (_error, _episodeId, context) => {
       queryClient.setQueryData(['watchedEpisodes'], context?.previousWatched);
+
+      toast.error('Failed to update watched episode.');
     },
 
     onSettled: () => {
