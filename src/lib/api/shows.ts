@@ -106,3 +106,23 @@ export const getEpisodesBySeason = async (
 
   return episodesData;
 };
+
+export const getSeasonRatings = async (showId: number) => {
+  const episodes = await getShowEpisodes(showId);
+
+  const seasons = new Map<number, number[]>();
+
+  episodes.forEach((episode) => {
+    if (episode.rating.average === null) return;
+
+    const ratings = seasons.get(episode.season) ?? [];
+
+    ratings.push(episode.rating.average);
+    seasons.set(episode.season, ratings);
+  });
+
+  return Array.from(seasons.entries()).map(([season, ratings]) => ({
+    season,
+    rating: ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length,
+  }));
+};

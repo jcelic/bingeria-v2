@@ -31,4 +31,7 @@ export type Episode = {
   season: number;
   number: number | null;
   airdate: string | null;
+  rating: {
+    average: number | null;
+  };
 };

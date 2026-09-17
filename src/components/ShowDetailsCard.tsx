@@ -6,6 +6,7 @@ import type { ReviewFormData } from '@/lib/validations/review';
 import { removeHtml } from '@/lib/utils/removeHtml';
 import ReviewCard from '@/components/ReviewCard';
 import EpisodesSection from './EpisodesSection';
+import SeasonRatingsSection from './SeasonRatingsSection';
 
 type ShowDetailsCardProps = {
   show: Show;
@@ -177,7 +178,12 @@ const ShowDetailsCard = ({
         </div>
       </article>
 
-      {!isCompact && <EpisodesSection id={show.id} />}
+      {!isCompact && (
+        <>
+          <EpisodesSection id={show.id} />
+          <SeasonRatingsSection showId={show.id} />
+        </>
+      )}
     </div>
   );
 };
