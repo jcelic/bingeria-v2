@@ -8,6 +8,8 @@ export const useToggleWatched = () => {
   return useMutation({
     mutationFn: toggleWatchedEpisode,
 
+    scope: { id: 'watched-toggle' },
+
     onMutate: async (episodeId) => {
       await queryClient.cancelQueries({
         queryKey: ['watchedEpisodes'],
