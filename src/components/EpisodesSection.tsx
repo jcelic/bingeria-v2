@@ -18,7 +18,11 @@ const EpisodesSection = ({ id }: { id: number }) => {
 
   const [activeSeason, setActiveSeason] = useState<number | null>(null);
 
-  const { data: watchedEpisodes = [] } = useWatchedEpisodes();
+  const {
+    data: watchedEpisodes = [],
+    isLoading: isWatchedLoading,
+    isError: isWatchedError,
+  } = useWatchedEpisodes();
   const { mutate: toggleWatched } = useToggleWatched();
 
   const {
@@ -80,12 +84,17 @@ const EpisodesSection = ({ id }: { id: number }) => {
           <div className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
             Select a season to view episodes.
           </div>
-        ) : isEpisodesLoading ? (
+        ) : isEpisodesLoading || isWatchedLoading ? (
           <EpisodesSkeleton />
         ) : isEpisodesError ? (
           <div className="flex items-center justify-center gap-2 rounded-lg bg-red-50 px-4 py-6 text-sm text-red-700 dark:bg-red-950/30 dark:text-red-400">
             <Icon icon="lucide:circle-alert" className="text-lg" />
             Failed to load episodes.
+          </div>
+        ) : isWatchedError ? (
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-red-50 px-4 py-6 text-sm text-red-700 dark:bg-red-950/30 dark:text-red-400">
+            <Icon icon="lucide:circle-alert" className="text-lg" />
+            Failed to load watched episodes.
           </div>
         ) : (
           episodesBySeason?.map((episode) => (
