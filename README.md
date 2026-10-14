@@ -1,6 +1,6 @@
 # Bingeria 🍿
 
-Bingeria je Next.js aplikacija za pregled i pretraživanje serija, spremanje serija na watchlist te pisanje recenzija.
+Bingeria je Next.js aplikacija za pregled i pretraživanje serija, spremanje serija na watchlist te pisanje recenzija. Razvijena je u sklopu Pontis DevCampa.
 
 **Live demo:** [bingeria.vercel.app](https://bingeria.vercel.app/)
 
